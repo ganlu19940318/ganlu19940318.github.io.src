@@ -19,7 +19,7 @@ Java反射也是日常开发和阅读源码中经常遇到的, 掌握反射是�
 
 简单来说, 反射可以帮助我们在动态运行的时候, 对于任意一个类, 可以获得其所有的方法(包括 public protected private 默认状态的), 所有的变量(包括 public protected private 默认状态的).
 <font color=red>反射就是把Java类中的各种成分映射成一个个的Java对象.</font>
-例如: 一个类有: 成员变量, 方法, 构造方法, 包等等信息, 利用反射技术可以对一个类进行解剖, 把个个组成部分映射成一个个对象. 
+例如: 一个类有: 成员变量, 方法, 构造方法, 包等等信息, 利用反射技术可以对一个类进行解剖, 把个个组成部分映射成一个个对象.
 如图是类的正常加载过程: 反射的原理在于Class对象.
 ![反射](https://blogpictures-1257055754.cos.ap-guangzhou.myqcloud.com/20170513133210763.png)
 
@@ -31,6 +31,7 @@ b. 增加代码的灵活性. 很多主流框架都使用了反射技术.
 # 3. 反射的使用
 
 假如有这样一个类 Person, 它拥有多个成员变量, country,city,name,province,height,age 等, 同时它拥有多个 构造方法, 多个方法, 这些变量, 方法的访问权限既有 public 也有 private 的. 下面我们以这个为例子, 一起看怎样使用反射获得相应的 Filed, Constructor, Method.
+
 ```Java
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -139,7 +140,9 @@ public class Main{
     }
 }
 ```
+
 运行结果:
+
 ```Java
 public Person(java.lang.String,java.lang.Integer)
 public Person()
@@ -186,20 +189,29 @@ public class Main{
     }
 }
 ```
+
 运行结果:
+
 ```Java
 public Person(java.lang.String,java.lang.Integer)
 testConstructor: =Person{country='CHINA', city='null', name='null', province='null', height=null}
 ```
+
 这说明我们成功通过反射调用 Person 带两个参数的沟改造方法.
+
 ### 3.1.3 注意事项
+
 如果该方法, 或者该变量不是 public 访问权限的, 我们应该调用相应的 setAccessible(true) 方法, 才能访问得到
+
 ```Java
 //if Constructor is not public,you should call this
 declaredConstructor.setAccessible(true);
 ```
+
 ## 3.2 获得Filed变量
+
 ### 3.2.1 获得所有的Filed变量
+
 ```Java
 import java.lang.reflect.Field;
 public class Main{
@@ -226,7 +238,9 @@ public class Main{
     }
 }
 ```
+
 运行结果:
+
 ```Java
 public java.lang.String Person.country
 public java.lang.String Person.city
@@ -240,7 +254,9 @@ private java.lang.Integer Person.age
 ```
 
 ### 3.2.2 获得指定的Filed变量
+
 现在假如我们要获得 Person 中的私有变量 age , 我们可以通过以下的代码获得.
+
 ```Java
 import java.lang.reflect.Field;
 public class Main{
@@ -260,19 +276,26 @@ public class Main{
     }
 }
 ```
+
 运行结果:
-```
+
+```text
 integer = 12
 ```
+
 ## 3.3 执行Method
-主要有以下几个方法, 
+
+主要有以下几个方法:
+
 ```Java
 public Method[] getDeclaredMethods()
 public Method[] getMethods() throws SecurityException
 public Method getDeclaredMethod()
 public Method getMethod(String name, Class<?> ... parameterTypes)
 ```
+
 ### 3.3.1 获取所有的Method
+
 ```Java
 import java.lang.reflect.Method;
 public class Main{
@@ -296,7 +319,9 @@ public class Main{
     }
 }
 ```
+
 运行结果:
+
 ```Java
 public java.lang.String Person.toString()
 public java.lang.Class Person.getGenericType()
@@ -304,7 +329,9 @@ private void Person.setCountry(java.lang.String)
 public void Person.getGenericHelper(java.util.HashMap)
 private java.lang.String Person.getMobile(java.lang.String)
 ```
+
 ### 3.3.2 获取指定的Method
+
 ```Java
 import java.lang.reflect.Method;
 public class Main{
@@ -326,11 +353,15 @@ public class Main{
     }
 }
 ```
+
 运行结果:
-```
+
+```text
 country : CHINA
 ```
+
 ## 3.4 操作数组
+
 ```Java
 import java.lang.reflect.Array;
 public class Main{
@@ -357,7 +388,9 @@ public class Main{
     }
 }
 ```
+
 运行结果:
+
 ```Java
 ----> object=帅哥,className=java.lang.String
 ----> object=7,className=java.lang.String
@@ -366,13 +399,18 @@ public class Main{
 ----> object=女生,className=java.lang.String
 ----> object=女神,className=java.lang.String
 ```
+
 从结果可以说明, 我们成功通过 Array.set(strArray,0,”帅哥”) 改变数组的值.
+
 ## 3.5 获得泛型类型
+
 ```Java
 public static void getGenericHelper(HashMap<String, Person> map) {
 }
 ```
+
 现在假设我们有这样一个方法, 那我们要怎样获得 HashMap 里面的 String, Person 的类型呢?
+
 ```Java
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -405,18 +443,25 @@ public class Main{
     }
 }
 ```
+
 运行结果:
+
 ```Java
 ----> rawType=class java.util.HashMap
 ----> type=class java.lang.String
 ----> type=class Person
 ```
+
 ## 3.6 怎样获得Metho, Field, Constructor的访问权限(public, private, ptotected等)
+
 其实很简单, 我们阅读文档可以发现他们都有 getModifiers() 方法, 该方法放回 int 数字,  我们在利用 Modifier.toString() 就可以得到他们的访问权限.
+
 ```Java
 int modifiers = method.getModifiers();
 Modifier.toString(modifiers);
 ```
+
 # 4. 参考链接
+
 [Java基础之—反射（非常重要）](https://blog.csdn.net/sinat_38259539/article/details/71799078)
 [Java 反射机制详解](https://blog.csdn.net/gdutxiaoxu/article/details/68947735)

@@ -10,9 +10,13 @@ tags: [Java, 基础储备]
 <!-- more -->
 
 # 1. 前言
+
 阅读源码和日常开发, 序列化也是基础中的基础, 这篇文章主要是记录序列化相关的知识点.
+
 # 2. 基本概念
+
 ## 2.1 什么是序列化和反序列化
+
 1. Java序列化是指把Java对象转换为字节序列的过程, 而Java反序列化是指把字节序列恢复为Java对象的过程;
 2. 序列化: 对象序列化的最主要的用处就是在传递和保存对象的时候, 保证对象的完整性和可传递性. 序列化是把对象转换成有序字节流, 以便在网络上传输或者保存在本地文件中. 序列化后的字节流保存了Java对象的状态以及相关的描述信息. 序列化机制的核心作用就是对象状态的保存与重建.
 3. 反序列化: 客户端从文件中或网络上获得序列化后的对象字节流后, 根据字节流中所保存的对象状态及描述信息, 通过反序列化重建对象.
@@ -25,13 +29,14 @@ tags: [Java, 基础储备]
 换句话说, 一方面, 发送方需要把这个Java对象转换为字节序列, 然后在网络上传送; 另一方面, 接收方需要从字节序列中恢复出Java对象.
 当我们明晰了为什么需要Java序列化和反序列化后, 我们很自然地会想Java序列化的好处. 其好处一是实现了数据的持久化, 通过序列化可以把数据永久地保存到硬盘上(通常存放在文件里), 二是, 利用序列化实现远程通信, 即在网络上传送对象的字节序列.
 总的来说可以归结为以下几点:
-1. 永久性保存对象, 保存对象的字节序列到本地文件或者数据库中; 
-2. 通过序列化以字节流的形式使对象在网络中进行传递和接收; 
+
+1. 永久性保存对象, 保存对象的字节序列到本地文件或者数据库中;
+2. 通过序列化以字节流的形式使对象在网络中进行传递和接收;
 3. 通过序列化在进程间传递对象;
 
 ## 2.3 序列化算法一般会按步骤做如下事情
 
-1. 将对象实例相关的类元数据输出. 
+1. 将对象实例相关的类元数据输出.
 2. 递归地输出类的超类描述直到不再有超类.
 3. 类元数据完了以后，开始从最顶层的超类开始输出对象实例的实际数据值.
 4. 从上至下递归输出实例的数据.
@@ -54,25 +59,28 @@ java.io.ObjectInputStream: 表示对象输入流;
 假定一个User类, 它的对象需要序列化, 可以有如下三种方法:
 
 1. 若User类仅仅实现了Serializable接口, 则可以按照以下方式进行序列化和反序列化:
-ObjectOutputStream采用默认的序列化方式, 对User对象的非transient的实例变量进行序列化. 
+ObjectOutputStream采用默认的序列化方式, 对User对象的非transient的实例变量进行序列化.
 ObjcetInputStream采用默认的反序列化方式, 对User对象的非transient的实例变量进行反序列化.
 2. 若User类仅仅实现了Serializable接口, 并且还定义了readObject(ObjectInputStream in)和writeObject(ObjectOutputSteam out), 则采用以下方式进行序列化与反序列化:
-ObjectOutputStream调用User对象的writeObject(ObjectOutputStream out)的方法进行序列化. 
+ObjectOutputStream调用User对象的writeObject(ObjectOutputStream out)的方法进行序列化.
 ObjectInputStream会调用User对象的readObject(ObjectInputStream in)的方法进行反序列化.
 3. 若User类实现了Externalnalizable接口, 且User类必须实现readExternal(ObjectInput in)和writeExternal(ObjectOutput out)方法, 则按照以下方式进行序列化与反序列化:
-ObjectOutputStream调用User对象的writeExternal(ObjectOutput out))的方法进行序列化. 
+ObjectOutputStream调用User对象的writeExternal(ObjectOutput out))的方法进行序列化.
 ObjectInputStream会调用User对象的readExternal(ObjectInput in)的方法进行反序列化.
 
 ## 2.5 JDK类库中序列化和反序列化的步骤
 
 序列化步骤:
+
 ```Java
 // 步骤一: 创建一个对象输出流, 它可以包装一个其它类型的目标输出流, 如文件输出流:
 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("D:\\object.out"));
 // 步骤二: 通过对象输出流的writeObject()方法写对象:
 oos.writeObject(new User("xuliugen", "123456", "male"));
 ```
+
 反序列化步骤:
+
 ```Java
 // 步骤一: 创建一个对象输入流, 它可以包装一个其它类型输入流，如文件输入流：
 ObjectInputStream ois= new ObjectInputStream(new FileInputStream("object.out"));
@@ -122,6 +130,7 @@ class User implements Serializable {
     }
 }
 ```
+
 序列化图示
 ![序列化图示](https://blogpictures-1257055754.cos.ap-guangzhou.myqcloud.com/20180408163613978.jpg)
 反序列化图示

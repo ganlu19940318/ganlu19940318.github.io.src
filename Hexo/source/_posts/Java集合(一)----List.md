@@ -17,7 +17,7 @@ tags: [Java, 基础储备]
 # 2. Java集合
 
 相比于数组(Array)来说, 集合类的长度可变, 更加适合于现代开发需求;
-在程序运行时, Java集合可以动态的进行扩展, 随着元素的增加而扩大. 
+在程序运行时, Java集合可以动态的进行扩展, 随着元素的增加而扩大.
 在Java中, 集合类通常存在于java.util包中.
 Java集合主要由2大体系构成, 分别是Collection体系和Map体系, 其中Collection和Map分别是2大体系中的顶层接口.
 Collection主要有三个子接口, 分别为List(列表), Set(集), Queue(队列). 其中, List, Queue中的元素有序可重复, 而Set中的元素无序不可重复;
@@ -38,12 +38,12 @@ ArrayList是Java集合框架中使用最多的一个类, 是一个数组队列, 
 它继承于AbstractList, 实现了List, RandomAccess, Cloneable, Serializable接口.
 (1)ArrayList实现List, 得到了List集合框架基础功能;
 (2)ArrayList实现RandomAccess, 获得了快速随机访问存储元素的功能, RandomAccess是一个标记接口, 没有任何方法;
-(3)ArrayList实现Cloneable, 得到了clone()方法, 可以实现克隆功能; 
+(3)ArrayList实现Cloneable, 得到了clone()方法, 可以实现克隆功能;
 (4)ArrayList实现Serializable, 表示可以被序列化, 通过序列化去传输, 典型的应用就是hessian协议.
 
 它具有如下特点:
 (1)容量不固定, 随着容量的增加而动态扩容(阈值基本不会达到)
-(2)有序集合(插入的顺序==输出的顺序)
+(2)有序集合(插入的顺序=输出的顺序)
 (3)插入的元素可以为null
 (4)增删改查效率更高(相对于LinkedList来说)
 (5)线程不安全.
@@ -100,6 +100,7 @@ Object[] toArray():把集合变成数组。
 ### 3.4.1 元素新增
 
 从直观上看, 在新增操作时, ArrayList效率不如LinkedList, 因为ArrayList底层是数组实现, 在动态扩容时, 性能有所损耗, 而LinkedList不存在数组扩容机制, 所以LinkedList效率更高.
+
 ```Java
 public class ListTest {
     //迭代次数
@@ -128,8 +129,10 @@ public class ListTest {
     }
 }
 ```
+
 结果:
-```
+
+```text
 第一组:
 LinkedList新增测试开始
 7609993
@@ -148,6 +151,7 @@ LinkedList新增测试开始
 ArrayList新增测试开始
 5320576
 ```
+
 结果与预想的有些不太一样, ArrayList的新增性能并不低.
 究其原因, 可能是经过JDK近几年的更新发展, 对于数组复制的实现进行了优化, 以至于ArrayList的性能也得到了提高.
 <font color=red>也可能是由于, LinkedList每次add操作都需要创建一个node对象, 这会产生额外开销, 而ArrayList只有在扩容的时候才需要数组的复制, 不扩容的时候, 没有额外开销.</font>
@@ -155,6 +159,7 @@ ArrayList新增测试开始
 ### 3.4.2 元素获取
 
 由于LinkedList是链表结构, 没有角标的概念, 没有实现RandomAccess接口, 不具备随机元素访问功能, 所以在get方面表现的差强人意, ArrayList再一次完胜.
+
 ```Java
 public class ListTest {
     //迭代次数，集合大小：
@@ -195,9 +200,10 @@ public class ListTest {
     }
 }
 ```
+
 结果:
 
-```
+```text
 第一组:
 LinkedList获取测试开始
 6193992452
@@ -216,6 +222,7 @@ LinkedList获取测试开始
 ArrayList获取测试开始
 10468298
 ```
+
 从结果中可以看到, ArrayList在随机访问方面表现的十分优秀, 比LinkedList强了很多, 基本上保持在500-1000倍.
 LinkedList为什么这么慢呢?这主要是LinkedList的代码实现所致, 每一次获取都是从头开始遍历, 一个个节点去查找, 每查找一次就遍历一次, 所以性能自然得不到提升.
 
@@ -234,6 +241,7 @@ LinkedList为什么这么慢呢?这主要是LinkedList的代码实现所致, 每
 在JDK1.7版本中, ArrayList的无参构造方法并没有生成容量为10的数组;
 elementData对象是ArrayList集合底层保存元素的实现;
 size属性记录了ArrayList集合中实际元素的个数;
+
 ```Java
 public class ArrayList<E> extends AbstractList<E>
         implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
@@ -281,6 +289,7 @@ public class ArrayList<E> extends AbstractList<E>
 ArrayList增加元素的方法事关重要, 我们都知道ArrayList底层是由数组, 可以随着元素的增加而扩容, 那么具体是如何实现的呢?
 在JDK1.7当中, 当第一个元素添加时, ensureCapacityInternal()方法会计算ArrayList的扩容大小, 默认为10;
 其中grow()方法最为重要, 如果需要扩容, 那么扩容后的大小是原来的1.5倍, 实际上最终调用了Arrays.copyOf()方法得以实现;
+
 ```Java
 //添加元素e
 public boolean add(E e) {
@@ -339,6 +348,7 @@ private static int hugeCapacity(int minCapacity) {
 remove(int index)是针对于角标来进行删除, 不需要去遍历整个集合, 效率更高;
 而remove(Object o)是针对于对象来进行删除, 需要遍历整个集合进行equals()方法比对, 所以效率较低;
 不过, 无论是哪种形式的删除, 最终都会调用System.arraycopy()方法进行数组复制操作, 所以效率都会受到影响;
+
 ```Java
 //在ArrayList的移除index位置的元素
 public E remove(int index) {
@@ -397,6 +407,7 @@ private void fastRemove(int index) {
 ### 3.5.4 set()
 
 由于ArrayList实现了RandomAccess, 所以具备了随机访问特性, 调用elementData()可以获取到对应元素的值；
+
 ```Java
 //设置index位置的元素值了element，返回该位置的之前的值
 public E set(int index, E element) {
@@ -414,6 +425,7 @@ public E set(int index, E element) {
 ### 3.5.5 get()
 
 通过elementData()方法获取对应角标元素, 在返回时候进行类型转换;
+
 ```Java
 //获取index位置的元素
 public E get(int index) {
@@ -434,24 +446,29 @@ E elementData(int index) {
 通过上面的例子中, 我们可以知道当进行增删改时, modCount会随着每一次的操作而+1, modCount记录了ArrayList内发生改变的次数.
 当迭代器在迭代时, 会判断expectedModCount的值是否还与modCount的值保持一致, 如果不一致则抛出异常.
 AbstractList类当中定义的变量:
+
 ```Java
 protected transient int modCount = 0;
 ```
+
 ArrayList获取迭代器对象:
+
 ```Java
 //返回一个Iterator对象，Itr为ArrayList的一个内部类，其实现了Iterator<E>接口
 public Iterator<E> iterator() {
     return new java.util.ArrayList.Itr();
 }
 ```
+
 迭代器实现:
+
 ```Java
 //Itr实现了Iterator接口，是ArrayList集合的迭代器对象
 private class Itr implements Iterator<E> {
     //类似游标，指向迭代器下一个值的位置
-    int cursor; 
+    int cursor;
     //迭代器最后一次取出的元素的位置。
-    int lastRet = -1; 
+    int lastRet = -1;
     //Itr初始化时候ArrayList的modCount的值。
     int expectedModCount = modCount;
     //利用游标，与size之前的比较，判断迭代器是否还有下一个元素
@@ -504,14 +521,17 @@ private class Itr implements Iterator<E> {
 
 transient修饰符是什么含义?
 当我们序列化对象时, 如果对象中某个属性不进行序列化操作, 那么在该属性前添加transient修饰符即可实现; 例如:
+
 ```Java
 private transient Object[] elementData;
 ```
+
 那么, 为什么ArrayList不想对elementData属性进行序列化呢? elementData可是集合中保存元素的数组啊, 如果不序列化elementData属性, 那么在反序列化时候, 岂不是丢失了原先的元素?
 ArrayList在添加元素时, 可能会对elementData数组进行扩容操作, 而扩容后的数组可能并没有全部保存元素.
-例如: 我们创建了new Object[10]数组对象, 但是我们只向其中添加了1个元素, 而剩余的9个位置并没有添加元素. 当我们进行序列化时, 并不会只序列化其中一个元素, 而是将整个数组进行序列化操作, 那些没有被元素填充的位置也进行了序列化操作, 间接的浪费了磁盘的空间, 以及程序的性能. 
+例如: 我们创建了new Object[10]数组对象, 但是我们只向其中添加了1个元素, 而剩余的9个位置并没有添加元素. 当我们进行序列化时, 并不会只序列化其中一个元素, 而是将整个数组进行序列化操作, 那些没有被元素填充的位置也进行了序列化操作, 间接的浪费了磁盘的空间, 以及程序的性能.
 所以, ArrayList才会在elementData属性前加上transient修饰符.
 接下来, 我们来看下ArrayList的writeObject(), readObject():
+
 ```Java
 //序列化写入：
 private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException{
@@ -539,12 +559,14 @@ private void readObject(java.io.ObjectInputStream s) throws java.io.IOException,
     }
 }
 ```
+
 ArrayList在序列化时会调用writeObject(), 直接将elementData写入ObjectOutputStream;
 而反序列化时则调用readObject(), 从ObjectInputStream获取elementData;
 
 ### 3.5.8 Arrays.copyOf()
 
 该方法在内部创建了一个新数组, 底层实现是调用System.arraycopy();
+
 ```Java
 public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
     T[] copy = ((Object)newType == (Object)Object[].class)
@@ -555,16 +577,21 @@ public static <T,U> T[] copyOf(U[] original, int newLength, Class<? extends T[]>
     return copy;
 }
 ```
+
 original - 要复制的数组
 newLength - 要返回的副本的长度
 newType - 要返回的副本的类型
+
 ### 3.5.9 System.arraycopy()
+
 该方法是用了native关键字, 调用的为C++编写的底层函数.
+
 ```Java
 public static native void arraycopy(Object src,  int  srcPos,
                                     Object dest, int destPos,
                                     int length);
 ```
+
 src - 源数组
 srcPos - 源数组中的起始位置
 dest - 目标数组
@@ -579,6 +606,7 @@ length - 要复制的数组元素的数量
 
 在LinkedList中, 内部类Node对象最为重要, 它组成了LinkedList集合的整个链表, 分别指向上一个点, 下一个结点, 存储着集合中的元素;
 成员变量中, first表明是头结点, last表明是尾结点;
+
 ```Java
 public class LinkedList<E>
         extends AbstractSequentialList<E>
@@ -618,7 +646,8 @@ public class LinkedList<E>
 
 LinkedList的添加方法, 主要分为2种, 一是直接添加一个元素, 二是在指定角标下添加一个元素;
 add(E e)底层调用linkLast(E e)方法, 就是在链表的最后面插入一个元素;
-add(int index, E element), 插入的角标如果==size, 则插入到链表最后; 否则, 按照角标大小插入到对应位置;.
+add(int index, E element), 插入的角标如果==size, 则插入到链表最后; 否则, 按照角标大小插入到对应位置;
+
 ```Java
 //添加元素：添加到最后一个结点；
 public boolean add(E e) {
@@ -675,6 +704,7 @@ void linkBefore(E e, java.util.LinkedList.Node<E> succ) {
     modCount++;
 }
 ```
+
 对于LinkedList集合增加元素来说, 可以简单的概括为以下几点:
 将添加的元素转换为LinkedList的Node对象节点;
 增加该Node节点的前后引用, 即该Node节点的prev, next属性, 让其分别指向哪一个节点);
@@ -684,6 +714,7 @@ void linkBefore(E e, java.util.LinkedList.Node<E> succ) {
 ### 3.6.3 remove()
 
 LinkedList的删除也提供了2种形式, 其一是通过角标删除元素, 其二就是通过对象删除元素; 不过, 无论哪种删除, 最终调用的都是unlink来实现的;
+
 ```Java
 //删除对应角标的元素：
 public E remove(int index) {
@@ -749,6 +780,7 @@ E unlink(java.util.LinkedList.Node<E> x) {
 LinkedList的set(int index, E element)方法与add(int index,E element)的设计思路基本一致, 都是创建新Node节点, 插入到对应的角标下, 修改前后节点的prev, next属性;
 其中, node(int index)方法至关重要, 通过对应角标获取到对应的集合元素.
 可以看到, node()中是根据角标的大小是选择从前遍历还是从后遍历整个集合. 也可以间接的说明, LinkedList在随机获取元素时性能很低, 每次的获取都得从头或者从尾遍历半个集合.
+
 ```Java
 //设置对应角标的元素：
 public E set(int index, E element) {
@@ -784,8 +816,10 @@ java.util.LinkedList.Node<E> node(int index) {
 ```Java
 get(int index)
 ```
+
 终于到了最后一个方法, 也是开发中最常用的方法. 其中, 核心方法node(int index)在上面已经介绍过.
 在通过node(int index)获取到对应节点后, 返回节点中的item属性, 该属性就是我们所保存的元素.
+
 ```Java
 //获取相应角标的元素：
 public E get(int index) {

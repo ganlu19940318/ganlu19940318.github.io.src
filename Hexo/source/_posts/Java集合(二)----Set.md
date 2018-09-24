@@ -15,13 +15,17 @@ tags: [Java, 基础储备]
 <font color=red>特别声明: 大部分内容并非原创, 引用自参考链接.</font>
 
 # 2. Set
+
 Set继承于Collection接口, 是一个不允许出现重复元素, 并且无序的集合, 主要有HashSet和TreeSet两大实现类.
 在判断重复元素的时候, Set集合会调用hashCode()和equal()方法来实现.
 HashSet是哈希表结构, 主要利用HashMap的key来存储元素, 计算插入元素的hashCode来获取元素在集合中的位置;
 TreeSet是红黑树结构, 每一个元素都是树中的一个节点, 插入的元素都会进行排序;
+
 ## 2.1 Set常用操作
+
 与List接口一样, Set接口也提供了集合操作的基本方法.
 但与List不同的是, Set还提供了equals(Object o)和hashCode(), 供其子类重写, 以实现对集合中插入重复元素的处理;
+
 ```Java
 public interface Set<E> extends Collection<E> {
 
@@ -55,7 +59,9 @@ public interface Set<E> extends Collection<E> {
     int hashCode();
 }
 ```
+
 ## 2.2 初识HashSet
+
 HashSet实现Set接口, 底层由HashMap(后面讲解)来实现, 为哈希表结构, 新增元素相当于HashMap的key, value默认为一个固定的Object. HashSet相当于一个阉割版的HashMap;
 当有元素插入的时候, 会计算元素的hashCode值, 将元素插入到哈希表对应的位置中来;
 它继承于AbstractSet, 实现了Set, Cloneable, Serializable接口.
@@ -68,9 +74,12 @@ HashSet实现Set接口, 底层由HashMap(后面讲解)来实现, 为哈希表结
 (2)允许插入Null值;
 (3)元素无序(添加顺序和遍历顺序不一致);
 (4)线程不安全, 若2个线程同时操作HashSet, 必须通过代码实现同步;
+
 ### 2.2.1 HashSet元素添加
+
 Set集合不允许添加重复元素, 那么到底是个怎么情况呢?
 来看一个简单的例子:
+
 ```Java
 public class HashSetTest {
     public static void main(String[] agrs){
@@ -104,21 +113,27 @@ public class HashSetTest {
     }
 }
 ```
+
 测试结果:
-```
+
+```text
 长度：1,内容为：[jiaboyan]
 长度：2,内容为：[App@74a14482, App@4554617c]
 长度：1,内容为：[App@1540e19d]
 ```
+
 可以看到, 第一个Set集合中最终只有一个元素; 第二个Set集合保留了2个元素; 第三个集合也只有1个元素;
 究竟是什么原因呢?
 让我们来看看HashSet的add(E e)方法:
+
 ```Java
 public boolean add(E e) {
     return map.put(e, PRESENT)==null;
 }
 ```
+
 在底层HashSet调用了HashMap的put(K key, V value)方法:
+
 ```Java
 public V put(K key, V value) {
     if (table == EMPTY_TABLE) {
@@ -142,13 +157,16 @@ public V put(K key, V value) {
     return null;
 }
 ```
+
 简单概括如下:
 在向HashMap中添加元素时, 先判断key的hashCode值是否相同, 如果相同, 则调用==, equals()进行判断, 若相同则覆盖原有元素; 如果不同, 则直接向Map中添加元素;
 反过来, 我们在看下上面的例子:
 在第一个Set集合中, 我们new了两个String对象, 赋了相同的值. 当传入到HashMap中时, key均为"jiaboyan", 所以hash和i的值都相同. 进行if (e.hash == hash && ((k = e.key) == key || key.equals(k)))判断, 由于String对象重写了equals()方法,所以在((k = e.key) == key || key.equals(k))判断时, 返回了true, 所以第二次的插入并不会增加Set集合的长度;
 第二个Set集合中, 也是new了两个对象, 但没有重写equals()方法(底层调用的Object的equals()，也就是==判断), 所以会增加2个元素;
 第三个Set集合中, 只new了一个对象, 调用的两次add方法都添加的这个新new的对象,所以也只是保留了1个元素;
+
 ## 2.3 初识TreeSet
+
 从名字上可以看出, 此集合的实现和树结构有关.与HashSet集合类似, TreeSet也是基于Map来实现, 具体实现TreeMap, 其底层结构为红黑树;
 与HashSet不同的是, TreeSet具有排序功能, 分为自然排序(123456)和自定义排序两类, 默认是自然排序; 在程序中, 我们可以按照任意顺序将元素插入到集合中, 等到遍历时TreeSet会按照一定顺序输出--倒序或者升序;
 它继承AbstractSet, 实现NavigableSet, Cloneable, Serializable接口.
@@ -162,9 +180,12 @@ public V put(K key, V value) {
 (3)允许插入Null值;
 (4)不允许插入重复元素;
 (5)线程不安全;
+
 ### 2.3.1 TreeSet元素排序
+
 在前面的章节, 我们讲到了TreeSet是一个有序集合,可以对集合元素排序,其中分为自然排序和自定义排序,那么这两种方式如何实现呢?
 首先,我们通过JDK提供的对象来展示, 我们使用String, Integer:
+
 ```Java
 public class TreeSetTest {
     public static void main(String[] agrs){
@@ -187,13 +208,17 @@ public class TreeSetTest {
     }
 }
 ```
+
 测试结果:
-```
+
+```text
 字母顺序：[a, b, d, z]
 数字顺序：[1, 6, 23, 24]
 ```
+
 ----
 接下来, 我们自定义对象, 看能否实现:
+
 ```Java
 import java.util.TreeSet;
 public class Main {
@@ -241,6 +266,7 @@ class App{
     }
 }
 ```
+
 测试结果:
 
 ```Java
@@ -251,8 +277,10 @@ Exception in thread "main" java.lang.ClassCastException: App cannot be cast to j
 	at Main.customSort(Main.java:15)
 	at Main.main(Main.java:4)
 ```
+
 ----
 为什么会报错呢?
+
 ```Java
 compare(key, key); // type (and possibly null) check
 final int compare(Object k1, Object k2) {
@@ -260,9 +288,11 @@ final int compare(Object k1, Object k2) {
         : comparator.compare((K)k1, (K)k2);
 }
 ```
+
 通过查看源码发现, 在TreeSet调用add方法时, 会调用到底层TreeMap的put方法, 在put方法中会调用到compare(key, key)方法, 进行key大小的比较;
 在比较的时候, 会将传入的key进行类型强转, 所以当我们自定义的App类进行比较的时候, 自然就会抛出异常, 因为App类并没有实现Comparable接口;
 将App实现Comparable接口, 再做比较:
+
 ```Java
 class App implements Comparable<App>{
     private String name;
@@ -304,12 +334,16 @@ class App implements Comparable<App>{
     }
 }
 ```
+
 测试结果:
-```
+
+```text
 TreeSet集合顺序为：[App{name='my', age=15}, App{name='name', age=25}, App{name='hello', age=10}, App{name='world', age=20}]
 ```
+
 ----
 此外, 还有另一种方式, 那就是实现Comparetor接口, 并重写compare方法;
+
 ```Java
 //自定义App类的比较器：
 public class AppComparator implements Comparator<App> {
@@ -320,7 +354,9 @@ public class AppComparator implements Comparator<App> {
     }
 }
 ```
+
 此时, App不用在实现Comparerable接口了, 单纯的定义一个类即可;
+
 ```Java
 import java.util.Comparator;
 import java.util.TreeSet;
@@ -384,25 +420,34 @@ class AppComparator implements Comparator<App> {
     }
 }
 ```
+
 测试结果:
-```
+
+```text
 TreeSet集合顺序为：[App{name='hello', age=10}, App{name='my', age=15}, App{name='world', age=20}, App{name='name', age=25}]
 ```
+
 最后, 再说下关于compareTo(), compare()方法:
-```
+
+```text
 结果返回大于0时，方法前面的值大于方法中的值；
 结果返回等于0时，方法前面的值等于方法中的值；
 结果返回小于0时，方法前面的值小于方法中的值；
 ```
+
 ## 2.4 HashSet源码分析(基于JDK1.7.0_75)
+
 HashSet基于HashMap, 底层方法是通过调用HashMap的API来实现, 因此HashSet源码结构比较简单, 代码较少.
+
 ### 2.4.1 成员变量
+
 在HashSet中, 有两个成员变量比较重要--map, PRESENT;
 其中,map就是存储元素的地方, 实际是一个HashMap. 当有元素插入到HashSet中时, 会被当做HashMap的key保存到map属性中去.
 对于HashMap来说,光有key还不够, 在HashSet的实现中, 每个key对应的value都默认为PRESENT属性, 也就是new了一个Object对象而已;
+
 ```Java
-public class HashSet<E> 
-    extends AbstractSet<E> 
+public class HashSet<E>
+    extends AbstractSet<E>
     implements Set<E>, Cloneable, java.io.Serializable{
     static final long serialVersionUID = -5024744406713321676L;
     //HashSet通过HashMap保存集合元素的：
@@ -411,8 +456,11 @@ public class HashSet<E>
     private static final Object PRESENT = new Object();
 }
 ```
+
 ### 2.4.2 构造方法
+
 HashSet的构造方法很简单, 主要是在方法内部初始化map属性, new了一个HashMap对象;
+
 ```Java
 public class HashSet<E>
         extends AbstractSet<E>
@@ -442,30 +490,41 @@ public class HashSet<E>
     }
 }
 ```
+
 ### 2.4.3 add()
+
 HashSet的add(E e)方法, 主要是调用底层HashMap的put(K key, V value)方法.
 其中key就是HashSet集合插入的元素, 而value则是默认的PRESENT属性(一个new Object());
+
 ```Java
 //调用HashMap中的put()方法:
 public boolean add(E e) {
     return map.put(e, PRESENT)==null;
 }
 ```
+
 ### 2.4.4 remove()
+
 与add(E e)方法类似, HashSet的remove(Object o)也是调用了底层HashMap的(Object key)方法;
 主要是计算出要删除元素的hash值, 在HashMap找到对应的对象, 然后从Entry[]数组中删除;
+
 ```Java
 //调用HashMap中的remove方法：
 public boolean remove(Object o) {
     return map.remove(o)==PRESENT;
 }
 ```
+
 ## 2.5 TreeSet源码分析(基于JDK1.7.0_75)
+
 与HashSet类似, TreeSet底层也是采用了一个Map来保存集合元素, 这个Map就是NavigableMap.
 不过, NavigableMap仅仅是一个接口, 具体的实现还是使用了TreeMap类;
+
 ### 2.5.1 成员变量
+
 成员变量m是一个NavigableMap类型的Map集合, 常用实现是TreeMap对象;
 在TreeMap中, key是我们TreeSet插入的元素, 而value则是TreeSet中另一个成员变量PRESENT, 一个普通的不能再普通的Object对象;
+
 ```Java
 public class TreeSet<E> extends AbstractSet<E>
         implements NavigableSet<E>, Cloneable, java.io.Serializable {
@@ -475,7 +534,9 @@ public class TreeSet<E> extends AbstractSet<E>
     private static final Object PRESENT = new Object();
 }
 ```
+
 ### 2.5.2 构造方法
+
 ```Java
 public class TreeSet<E> extends AbstractSet<E>
 implements NavigableSet<E>, Cloneable, java.io.Serializable {
@@ -503,24 +564,33 @@ implements NavigableSet<E>, Cloneable, java.io.Serializable {
   }
 }
 ```
+
 ### 2.5.3 add()
+
 向TreeSet中添加元素
+
 ```Java
 public boolean add(E e) {
     return m.put(e, PRESENT)==null;
 }
 ```
+
 ### 2.5.4 remove()
+
 删除TreeSet中元素o
+
 ```Java
 public boolean remove(Object o) {
     return m.remove(o)==PRESENT;
 }
 ```
+
 ## 2.6 SortedSet和NavigableSet到底是什么
+
 在一些关于TreeSet讲解的文章中, 在介绍TreeSet的时候都会提到NavigableSet, 接着会说下NavigableSet是个"导航Set集合", 提供了一系列"导航"方法. 那么, 什么是"导航"方法?
 通过接口的定义, 我们可以看到NavigableSet继承了SortedSet接口(后面说), 实现了对其的扩展;
 而通过下面的方法, 我们得出NavigableSet实际提供了一系列的搜索匹配元素的功能, 能获取到某一区间内的集合元素;
+
 ```Java
 public interface NavigableSet<E> extends SortedSet<E> {
      E lower(E e);//返回此set集合中小于e元素的最大元素
@@ -544,8 +614,10 @@ public interface NavigableSet<E> extends SortedSet<E> {
      SortedSet<E> tailSet(E fromElement);
 }
 ```
+
 说完了NavigableSet, 我们在一起儿看下其父类SortedSet接口:
 通过名字, 我们可以得出此接口跟排序有关, 会提供跟排序的方法;
+
 ```Java
 public interface SortedSet<E> extends Set<E> {
     //返回与排序有关的比较器
@@ -562,6 +634,8 @@ public interface SortedSet<E> extends Set<E> {
     E last();
 }
 ```
+
 # 3. 参考链接
+
 [Java集合：Set源码详细分析(一)](https://mp.weixin.qq.com/s/R2iFPE2eO2KdkRp0vEpdlA)
 [Java集合：Set源码详细分析(二)](https://mp.weixin.qq.com/s/ZTNJIbrDfLUdkEU5aiDRFQ)
