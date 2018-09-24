@@ -103,13 +103,16 @@ public class Person {
 ## 3.1 获得构造方法
 
 几个重要的方法
+
 | 方法                                                                  | 描述                                                                         |
-| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| :----------------------------------------------------------------------- | :------------------------------------------------------------------------------ |
 | public Constructor getConstructor(Class… parameterTypes)              | 获得指定的构造方法，注意只能获得 public 权限的构造方法，其他访问权限的获取不到 |
 | public Constructor getDeclaredConstructor(Class… parameterTypes)      | 获得指定的构造方法，注意可以获取到任何访问权限的构造方法。 |
 | public Constructor[] getConstructors() throws SecurityException         | 获得所有 public 访问权限的构造方法                                |
 | public Constructor[] getDeclaredConstructors() throws SecurityException | 获得所有的构造方法，包括（public, private,protected,默认权限的） |
+
 ### 3.1.1 获得所有的构造方法
+
 ```Java
 import java.lang.reflect.Constructor;
 public class Main{
