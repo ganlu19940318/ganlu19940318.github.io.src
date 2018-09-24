@@ -23,8 +23,16 @@ dstat -nf
 
 ## 2.2 查看端口被占用
 
+方法一:
+
 ```linux
 lsof -i:8080
+```
+
+方法二:
+
+```linux
+netstat -anlp | grep 8080
 ```
 
 ## 2.3 生成指定大小的文件
