@@ -88,6 +88,7 @@ https://api.example.com/v1/employees
 
 ## 6.3 常用状态码
 
+```vim
 200 OK - [GET]: 服务器成功返回用户请求的数据, 该操作是幂等的.
 201 CREATED - [POST/PUT/PATCH]: 用户新建或修改数据成功.
 202 Accepted - [*]:表示一个请求已经进入后台排队(异步任务)
@@ -100,6 +101,7 @@ https://api.example.com/v1/employees
 410 Gone -[GET]: 用户请求的资源被永久删除, 且不会再得到的.
 422 Unprocesable entity - [POST/PUT/PATCH]:  当创建一个对象时, 发生一个验证错误.
 500 INTERNAL SERVER ERROR - [*]: 服务器发生错误, 用户将无法判断发出的请求是否成功.
+```
 
 ## 6.4 版本号
 
