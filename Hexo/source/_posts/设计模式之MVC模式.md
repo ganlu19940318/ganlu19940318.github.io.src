@@ -30,5 +30,4 @@ https://github.com/ganlu19940318/Head-First/tree/master/Model-View-Controller
 # 4. 参考链接
 
 << Head First 设计模式 >>
-
 [MVC 模式|菜鸟教程](http://www.runoob.com/design-pattern/mvc-pattern.html)
