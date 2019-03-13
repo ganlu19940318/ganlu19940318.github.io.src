@@ -9,6 +9,10 @@ tags: [Java, 并发设计, 基础储备]
 
 <!-- more -->
 
+# 0. 前言
+
+这里只是简单介绍和了解Java NIO和AIO,以后补上深入的部分.
+
 # 1. 网络NIO
 
 Java NIO是New IO的简称,它是一种可以替代Java IO的一套新的IO机制.使用NIO技术可以大大提高线程的使用效率.
