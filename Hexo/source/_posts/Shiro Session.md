@@ -281,9 +281,17 @@ defaultWebSessionManager.setSessionDAO(new MyRedisSessionDao());
 defaultWebSecurityManager.setSessionManager(defaultWebSessionManager);
 ```
 
-# 5. 源代码地址
+# 5. 源代码地址和注意事项
+
+## 5.1 源代码地址
 
 GitHub链接:https://github.com/ganlu19940318/shiro-session
+
+## 5.2 注意事项
+
+1. 自定义DAO的doCreate中不要忘记assignSessionId(session,sessionId).
+2. Apache Shiro 1.3.2是稳定版,对于版本1.4.0,部分资料已经过时.
+3. Shiro不推荐使用shiro-all这个总包,可能会造成Maven工作不正常,一般常用的是core,spring,web这三个包.
 
 # 6. 参考链接
 
