@@ -165,7 +165,7 @@ def stocGradAscent1(dataMatrix, classLabels, numIter=150):
 2. 随机选取样本更新.(这里通过随机选取样本来更新回归系数.这种方法将减少周期性的波动,如上图,这种方法每次随机从列表中选出一个值,然后从列表中删掉该值(再进行下一次迭代))
 3. 增加了一个迭代次数作为第3个参数.(如果没给定,算法会以默认次数迭代,如果给定,那么算法将按新的参数值迭代)
 
-![这里写图片描述](http://img.blog.csdn.net/20171231215534796?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQnJhdmVMb3Nlcg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+![这里写图片描述](https://blogpictures-1257055754.cos.ap-guangzhou.myqcloud.com/20171231215534796)
 
 可以看出:
 
